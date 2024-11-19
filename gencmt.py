@@ -1,21 +1,14 @@
 import subprocess
 import json
 import requests
-
-# 获取git diff
-# def get_git_diff():
-#     try:
-#         # 执行 git diff 命令并获取输出
-#         result = subprocess.run(['git', 'diff'], capture_output=True, text=True, check=True)
-#         return result.stdout
-#     except subprocess.CalledProcessError as e:
-#         print(f"Error while executing git diff: {e}")
-#         return None
-import subprocess
 import os
 import typer
+from dotenv import load_dotenv
 
 app = typer.Typer()
+load_dotenv()
+
+gemini_key = os.getenv("GEMINI_KEY")
 
 def get_git_diff():
     # 获取当前工作目录
@@ -158,7 +151,7 @@ def call_api_gemini(content):
     }
     
     # 使用你的 API 密钥
-    api_key = ""
+    api_key = gemini_key
     params = {"key": api_key}
     
     try:
@@ -179,7 +172,7 @@ def call_api_gemini(content):
 #     # call_api_gemini(content)
 #     call_api_aisino(content)
 
-@app.command()
+@app.command('g', help='gen commit,type can be aisino or gemini')
 def gencmt(type: str='aisino'):
     # 获取 git diff 输出
     diff = get_git_diff()
@@ -190,9 +183,9 @@ def gencmt(type: str='aisino'):
         # print("Rendered content:\n", content)
         
         # 调用 API
-        if type == 'aisino':
+        if type == 'aisino' or type == 'a':
             call_api_aisino(content)
-        elif type == 'gemini':
+        elif type == 'gemini' or type == 'g':
             call_api_gemini(content)
         else:
             print(f"wrong type: {type},try aisino")
