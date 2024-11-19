@@ -202,6 +202,45 @@ def gencmt(type: str='aisino'):
             print(f"wrong type: {type},try aisino")
             call_api_aisino(content)
 
+
+@app.command('env', help='extract example env')
+def create_example_env(file_path='.env'):
+    # 目标 .env.example 文件路径
+    example_file_path = '.env.example'
+    
+    # 检查 .env 文件是否存在
+    if not os.path.exists(file_path):
+        print(f"Error: {file_path} does not exist.")
+        return
+
+    # 打开 .env 文件读取内容
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+
+    # 处理文件内容，替换每行的 value 部分为 'VALUE'
+    modified_lines = []
+    for line in lines:
+        # 忽略空行和注释行
+        if line.strip() == '' or line.strip().startswith('#'):
+            modified_lines.append(line)
+        else:
+            # 分离 key 和 value
+            parts = line.split('=')
+            if len(parts) == 2:
+                key = parts[0]
+                modified_line = f"{key}=VALUE\n"
+                modified_lines.append(modified_line)
+            else:
+                # 如果格式不对，保留原始行
+                modified_lines.append(line)
+
+    # 将修改后的内容写入 .env.example 文件
+    with open(example_file_path, 'w') as f:
+        f.writelines(modified_lines)
+
+    print(f".env.example file created with keys replaced by 'VALUE'.")
+
+
 if __name__ == "__main__":
     # main()
     app()
