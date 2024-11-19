@@ -158,11 +158,16 @@ def call_api_gemini(content):
     api_key = gemini_key
     params = {"key": api_key}
 
-    proxies = {
-        'http': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}',
-        'https': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}'
-    }
-
+    if proxy_user and proxy_pass:
+        proxies = {
+            'http': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}',
+            'https': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}'
+        }
+    else:
+        proxies = {
+            'http': f'socks5://{proxy_ip}:{proxy_port}',
+            'https': f'socks5://{proxy_ip}:{proxy_port}'
+        }
     # print(proxies)
     
     try:
@@ -203,7 +208,8 @@ def gencmt(type: str='aisino'):
             call_api_aisino(content)
 
 # vim /usr/local/bin/git-gencmt
-# python3 /home/ys/workspace/python/EffTools/gencmt.py g
+# python3 /home/ys/workspace/python/EffTools/gencmt.py g --type g
+# chmod +x /usr/local/bin/git-gencmt
 
 
 @app.command('env', help='extract example env')
