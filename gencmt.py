@@ -202,6 +202,9 @@ def gencmt(type: str='aisino'):
             print(f"wrong type: {type},try aisino")
             call_api_aisino(content)
 
+# vim /usr/local/bin/git-gencmt
+# python3 /home/ys/workspace/python/EffTools/gencmt.py g
+
 
 @app.command('env', help='extract example env')
 def create_example_env(file_path='.env'):
