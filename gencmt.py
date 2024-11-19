@@ -6,9 +6,13 @@ import typer
 from dotenv import load_dotenv
 
 app = typer.Typer()
-load_dotenv()
 
+load_dotenv()
 gemini_key = os.getenv("GEMINI_KEY")
+proxy_port = os.getenv("PROXY_PORT")
+proxy_user = os.getenv("PROXY_USER")
+proxy_pass = os.getenv("PROXY_PASS")
+proxy_ip = os.getenv("PROXY_IP")
 
 def get_git_diff():
     # 获取当前工作目录
@@ -153,10 +157,17 @@ def call_api_gemini(content):
     # 使用你的 API 密钥
     api_key = gemini_key
     params = {"key": api_key}
+
+    proxies = {
+        'http': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}',
+        'https': f'socks5://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}'
+    }
+
+    # print(proxies)
     
     try:
         # 发送请求
-        response = requests.post(url, headers=headers, json=payload, params=params)
+        response = requests.post(url, headers=headers, json=payload, params=params, proxies=proxies)
         if response.status_code == 200:
             # 打印响应内容
             content_response = response.json()
