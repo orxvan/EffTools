@@ -194,6 +194,7 @@ def gencmt(type: str='aisino'):
     diff = get_git_diff()
     
     if diff:
+        print("👨‍🍳 get commit,be waiting!")
         # 渲染模板
         content = render_template(diff)
         # print("Rendered content:\n", content)
@@ -206,6 +207,8 @@ def gencmt(type: str='aisino'):
         else:
             print(f"wrong type: {type},try aisino")
             call_api_aisino(content)
+    else:
+        print("🤗 no diff, you can make `git add somefile`")
 
 # vim /usr/local/bin/git-gencmt
 # python3 /home/ys/workspace/python/EffTools/gencmt.py g --type g
